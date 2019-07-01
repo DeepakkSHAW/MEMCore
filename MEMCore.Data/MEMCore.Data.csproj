@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20190626052320_TheStater.cs" />
+    <Compile Remove="Migrations\20190626055141_TheStater.cs" />
+    <Compile Remove="Migrations\20190628040335_relationship_Exp_n_Cat.cs" />
+    <Compile Remove="Migrations\20190628060018_added_expCategories.cs" />
+    <Compile Remove="Migrations\20190628061021_added_expCategories.cs" />
+    <Compile Remove="Migrations\20190701024932_added_signature.cs" />
+    <Compile Remove="Migrations\20190701025439_added_signature.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MEMCore.Domain\MEMCore.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
