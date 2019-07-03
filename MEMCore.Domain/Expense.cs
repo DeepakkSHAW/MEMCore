@@ -9,17 +9,17 @@ namespace MEMCore.Domain
         //public String ExpensesDetails { get; set; }
         public double ExpensesAmount { get; set; }
         public DateTime ExpenseDate { get; set; } = DateTime.Now;
-        public string signature { get; set; }
+        public string Signature { get; set; }
         //only for audit purposes
         public DateTime inDate { get; private set; }
         //only for audit purposes
         public DateTime updateDate { get; set; }
         public int ExpenseCategoryId { get; set; }
         public int CurrencyId { get; set; }
+
         //Navigation properties
         public ExpenseDetail ExpenseDetail { get; set; }
         public ExpenseCategory Category { get; set; }
         public Currency Currency { get; set; }
-        //Expense Signature
     }
 }

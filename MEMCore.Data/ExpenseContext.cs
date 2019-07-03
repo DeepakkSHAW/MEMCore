@@ -5,15 +5,21 @@ namespace MEMCore.Data
 {
     public class ExpenseContext : DbContext
     {
-        public DbSet<Expense> Expenses { get; set; }
+
         public DbSet<ExpenseCategory> Categories { get; set; }
+        public DbSet<Currency> Currencies { get; set; }
+        public DbSet<Expense> Expenses { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //ForAccessDB: https://www.nuget.org/packages/EntityFrameworkCore.Jet/
+            //Enum: https://medium.com/agilix/entity-framework-core-enums-ee0f8f4063f2
+
             optionsBuilder.UseSqlServer(
             "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=MEMCoreDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
-);
+             ,options => options.MaxBatchSize(30)
+             );
+            optionsBuilder.EnableSensitiveDataLogging();
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -21,6 +27,7 @@ namespace MEMCore.Data
 
             modelBuilder.Entity<Expense>()
                 .Property(c => c.ExpenseTitle)
+                
                 .IsRequired(true)
                 .HasMaxLength(50);
 
@@ -29,7 +36,7 @@ namespace MEMCore.Data
                 .IsRequired();
 
             modelBuilder.Entity<Expense>()
-                .Property(c => c.signature)
+                .Property(c => c.Signature)
                 .HasMaxLength(2)
                 .IsRequired(false);
 
@@ -45,7 +52,9 @@ namespace MEMCore.Data
             modelBuilder.Entity<ExpenseDetail>()
                 .Property(c => c.Detail)
                 .HasMaxLength(250)
-                .IsRequired(false);
+                .IsRequired(false)
+                
+                ;
 
             modelBuilder.Entity<ExpenseCategory>()
             .Property(c => c.Category)
@@ -62,6 +71,7 @@ namespace MEMCore.Data
         //        .Property(c => c.signature)
         //        .HasConversion(x => (int)x, x => (Signature)x);
 
+                            //*Seeding Data*//
             modelBuilder.Entity<ExpenseCategory>().HasData(
                 new ExpenseCategory() { Id = 1, Category = "Grocery" },
                 new ExpenseCategory() { Id = 2, Category = "Restaurants" },
