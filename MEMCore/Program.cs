@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MEMCore
 {
@@ -12,16 +13,20 @@ namespace MEMCore
         private static MEMCore.Data.ExpenseContext _expContext;
         static void Main(string[] args)
         {
+            Console.WriteLine("Synchronous Approach");
             Console.WriteLine("Monthly expenses management system!");
-            _expContext = new MEMCore.Data.ExpenseContext();
-            _expContext.GetService<ILoggerFactory>().AddProvider(new Data.MEMLoggerProvider());
 
             try
             {
+                _expContext = new MEMCore.Data.ExpenseContext();
+                _expContext.Database.Migrate();
+                _expContext.GetService<ILoggerFactory>().AddProvider(new Data.MEMLoggerProvider());
+
+
                 //Test methods from main
                 //NewExpense();
                 //NewExpenseWithoutDetails();
-                //DeleteExpense(8);
+                DeleteExpense(9);
 
             }
             catch (Exception ex)
