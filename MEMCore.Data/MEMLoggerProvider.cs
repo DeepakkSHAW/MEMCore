@@ -33,6 +33,7 @@ namespace MEMCore.Data
                 //    Console.WriteLine(formatter(state, exception));
                 //    Console.WriteLine();
                 //}
+                Console.WriteLine(formatter(state, exception));
             }
 
             public IDisposable BeginScope<TState>(TState state)

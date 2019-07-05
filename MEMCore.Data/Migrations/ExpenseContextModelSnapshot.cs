@@ -3,7 +3,6 @@ using System;
 using MEMCore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MEMCore.Data.Migrations
@@ -15,15 +14,12 @@ namespace MEMCore.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062");
 
             modelBuilder.Entity("MEMCore.Domain.Currency", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("CurrencyName")
                         .IsRequired()
@@ -74,8 +70,7 @@ namespace MEMCore.Data.Migrations
             modelBuilder.Entity("MEMCore.Domain.Expense", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("CurrencyId");
 
@@ -94,11 +89,11 @@ namespace MEMCore.Data.Migrations
 
                     b.Property<DateTime>("inDate")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("getutcdate()");
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<DateTime>("updateDate")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("getutcdate()");
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.HasKey("Id");
 
@@ -112,8 +107,7 @@ namespace MEMCore.Data.Migrations
             modelBuilder.Entity("MEMCore.Domain.ExpenseCategory", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Category")
                         .IsRequired()
@@ -214,8 +208,7 @@ namespace MEMCore.Data.Migrations
             modelBuilder.Entity("MEMCore.Domain.ExpenseDetail", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Detail")
                         .HasMaxLength(250);

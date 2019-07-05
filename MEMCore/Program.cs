@@ -4,13 +4,13 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace MEMCore
 {
     class Program
     {
         private static MEMCore.Data.ExpenseContext _expContext;
+
         static void Main(string[] args)
         {
             Console.WriteLine("Synchronous Approach");
@@ -18,11 +18,14 @@ namespace MEMCore
 
             try
             {
+
                 _expContext = new MEMCore.Data.ExpenseContext();
-                _expContext.Database.Migrate();
+                
+                //*This approach applicable if you have database context available*//
                 _expContext.GetService<ILoggerFactory>().AddProvider(new Data.MEMLoggerProvider());
+                _expContext.Database.Migrate();
 
-
+                //EditExpense(1);
                 //Test methods from main
                 //NewExpense();
                 //NewExpenseWithoutDetails();
@@ -35,7 +38,7 @@ namespace MEMCore
                 Console.WriteLine(ex.Message);
                 Console.ResetColor();
             }
-            Console.ReadKey();
+            Console.WriteLine("Press any key to close.."); Console.ReadKey();
 
         }
         private static int NewExpense()
@@ -77,43 +80,39 @@ namespace MEMCore
             catch (Exception) { throw; }
             return result;
         }
-        private static IDictionary<int, string> GetCurrency()
+        private static int EditExpense(int id)
         {
-            var vCurrency = new Dictionary<int, string>();
+            int result = -1;
             try
             {
-                var quary = _expContext.Currencies.OrderBy(x => x.CurrencyName);
-                foreach (var cur in quary)
-                {
-                    vCurrency.TryAdd(cur.Id, cur.CurrencyName);
-                    //vCurrency.Add(new KeyValuePair<int, string>(2, "DK"));
-                }
+                //var oExp = new Domain.Expense();
+                //oExp.ExpenseTitle = "An update expense test";
+                //oExp.ExpensesAmount = 510.20;
+                //oExp.ExpenseDate = new DateTime(2020, 12, 18, 16, 20, 20);
+                //oExp.CurrencyId = 1;
+                //oExp.ExpenseCategoryId = 2;
+                //oExp.ExpenseDetail = new Domain.ExpenseDetail { Detail = "Dummy after audit-able columns" };
 
+                var entiry = _expContext.Expenses.Include(d => d.ExpenseDetail).FirstOrDefault(x => x.Id == id);
+
+                if (entiry != null)
+                {
+                    entiry.ExpenseTitle = "--An update expense test";
+                    entiry.ExpensesAmount = 519.65;
+                    entiry.ExpenseDate = new DateTime(2019, 7, 4, 20, 20, 20);
+                    entiry.ExpenseCategoryId = 7;
+                    entiry.CurrencyId = 7;
+                    entiry.updateDate = DateTime.UtcNow;
+                    entiry.ExpenseDetail = new Domain.ExpenseDetail { Detail = "updating the details+++++++++++++++++++++++" };
+                   // _expContext.Update(oExp);
+                    result = _expContext.SaveChanges();
+                }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(ex.Message);
-                Console.ResetColor();
+                throw;
             }
-            return vCurrency;
-        }
-        private static IDictionary<int, string> GetCategory()
-        {
-            var vCategory = new Dictionary<int, string>();
-            try
-            {
-                var quary = _expContext.Categories.OrderBy(x => x.Category);
-                foreach (var cur in quary)
-                    vCategory.TryAdd(cur.Id, cur.Category.First().ToString().ToUpper() + cur.Category.Substring(1));
-            }
-            catch (Exception ex)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(ex.Message);
-                Console.ResetColor();
-            }
-            return vCategory;
+            return result;
         }
         private static List<Domain.Expense> GetExpenses()
         {
@@ -183,5 +182,44 @@ namespace MEMCore
             }
             return result;
         }
+        private static IDictionary<int, string> GetCurrency()
+        {
+            var vCurrency = new Dictionary<int, string>();
+            try
+            {
+                var quary = _expContext.Currencies.OrderBy(x => x.CurrencyName);
+                foreach (var cur in quary)
+                {
+                    vCurrency.TryAdd(cur.Id, cur.CurrencyName);
+                    //vCurrency.Add(new KeyValuePair<int, string>(2, "DK"));
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(ex.Message);
+                Console.ResetColor();
+            }
+            return vCurrency;
+        }
+        private static IDictionary<int, string> GetCategory()
+        {
+            var vCategory = new Dictionary<int, string>();
+            try
+            {
+                var quary = _expContext.Categories.OrderBy(x => x.Category);
+                foreach (var cur in quary)
+                    vCategory.TryAdd(cur.Id, cur.Category.First().ToString().ToUpper() + cur.Category.Substring(1));
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(ex.Message);
+                Console.ResetColor();
+            }
+            return vCategory;
+        }
+
     }
 }

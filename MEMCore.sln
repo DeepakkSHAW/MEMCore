@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MEMCore.Data", "MEMCore.Dat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MEMCore.Domain", "MEMCore.Domain\MEMCore.Domain.csproj", "{C7A2AA85-46DB-46AA-A948-8BF46EDADEC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MEMCore.Services", "MEMCore.Services\MEMCore.Services.csproj", "{3AFC969B-D133-428B-A4EC-9A8B49600975}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MEMCore.Services", "MEMCore.Services\MEMCore.Services.csproj", "{3AFC969B-D133-428B-A4EC-9A8B49600975}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MEMCoreAsync.Console", "MEMCoreAsync.Console\MEMCoreAsync.Console.csproj", "{5FA724FE-BA6B-47B0-8649-61AF5B1C4D9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MEMCoreAsync.Console", "MEMCoreAsync.Console\MEMCoreAsync.Console.csproj", "{5FA724FE-BA6B-47B0-8649-61AF5B1C4D9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MEMCore.API", "MEMCore.API\MEMCore.API.csproj", "{CBF0E9D5-43FB-41EE-8971-217047254759}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{5FA724FE-BA6B-47B0-8649-61AF5B1C4D9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FA724FE-BA6B-47B0-8649-61AF5B1C4D9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FA724FE-BA6B-47B0-8649-61AF5B1C4D9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBF0E9D5-43FB-41EE-8971-217047254759}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBF0E9D5-43FB-41EE-8971-217047254759}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBF0E9D5-43FB-41EE-8971-217047254759}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBF0E9D5-43FB-41EE-8971-217047254759}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

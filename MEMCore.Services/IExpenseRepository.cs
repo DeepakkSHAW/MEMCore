@@ -10,8 +10,12 @@ namespace MEMCore.Services
         //IEnumerable<Domain.Expense> GetExpenses();
         //Domain.Expense GetExpense(int id);
 
-       Task<IEnumerable<Domain.Expense>> GetExpensesAsyn();
-       Task<Domain.Expense> GetExpenseAsync(int id);
-
+       Task<IEnumerable<Domain.Expense>> GetExpensesAsync();
+       Task<Domain.Expense> GetExpensesAsync(int id);
+       Task<IEnumerable<Domain.Expense>> GetExpensesAsync(DateTime from , DateTime to);
+       Task<int> NewExpensesAsync(Domain.Expense expense);
+       Task<int> DeleteExpensesAsync(int expenseId);
+       Task<int> EditExpensesAsync(Domain.Expense expense, int id);
+       void DeleteIT(string message, int times = 1, int lineBreaks = 1);
     }
 }
