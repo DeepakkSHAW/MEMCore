@@ -14,8 +14,7 @@ namespace MEMCoreAsync
 
             try
             {
-                NewExpenses();
-                DeleteExpenses();
+                //DeleteExpenses();
                 NewExpenses();
                 //EditExpenses();
                 //ListAllCurrancy();
@@ -24,7 +23,7 @@ namespace MEMCoreAsync
                 //GetaCategory();
                 ListAllExpenses();
                 //ListAExpenses();
-                //ListExpensesFromToDates();
+                ListExpensesFromToDates();
 
              }
             catch (Exception ex)
@@ -37,53 +36,53 @@ namespace MEMCoreAsync
         }
         public static void ListAllCurrancy()
         {
-            var srv = new MEMCore.Services.CurrencyRepository();
-            var asynCallGetCurrancy = Task.Run(() => srv.GetCurrencyAsync(true));
-            asynCallGetCurrancy.Wait();
-            var result = asynCallGetCurrancy.Result;
+            //MEMCore.Services.ICurrencyRepository srv = new MEMCore.Services.CurrencyRepository();
+            //var asynCallGetCurrancy = Task.Run(() => srv.GetCurrencyAsync(true));
+            //asynCallGetCurrancy.Wait();
+            //var result = asynCallGetCurrancy.Result;
 
-            Console.ForegroundColor = ConsoleColor.Blue;
-            foreach (var item in result)
-                Console.WriteLine($"Category ID:{item.Key} has value {item.Value}.");
+            //Console.ForegroundColor = ConsoleColor.Blue;
+            //foreach (var item in result)
+            //    Console.WriteLine($"Category ID:{item.Key} has value {item.Value}.");
 
             Console.ResetColor();
         }
         public static void GetACurrancy()
         {
-            var srv = new MEMCore.Services.CurrencyRepository();
-            var asynCallGetACur = Task.Run(() => srv.GetCurrencyAsync(3));
-            asynCallGetACur.Wait();
-            var result = asynCallGetACur.Result;
-            Console.WriteLine(result.Key);
-            Console.WriteLine(result.Value);
+            //MEMCore.Services.ICurrencyRepository srv = new MEMCore.Services.CurrencyRepository();
+            //var asynCallGetACur = Task.Run(() => srv.GetCurrencyAsync(3));
+            //asynCallGetACur.Wait();
+            //var result = asynCallGetACur.Result;
+            //Console.WriteLine(result.Key);
+            //Console.WriteLine(result.Value);
         }
         public static void ListAllCategories()
         {
-            var srv = new MEMCore.Services.CategoryRepository();
-            var asynCallGetCategories = Task.Run(() => srv.GetCategoriesAsync(true));
-            asynCallGetCategories.Wait();
-            var result = asynCallGetCategories.Result;
+            //MEMCore.Services.ICategoryRepository srv = new MEMCore.Services.CategoryRepository();
+            //var asynCallGetCategories = Task.Run(() => srv.GetCategoriesAsync(true));
+            //asynCallGetCategories.Wait();
+            //var result = asynCallGetCategories.Result;
 
-            Console.ForegroundColor = ConsoleColor.Blue;
-            foreach (var item in result)
-                Console.WriteLine($"Category ID:{item.Key} has value {item.Value}.");
+            //Console.ForegroundColor = ConsoleColor.Blue;
+            //foreach (var item in result)
+            //    Console.WriteLine($"Category ID:{item.Key} has value {item.Value}.");
 
             Console.ResetColor();
         }
         public static void GetaCategory()
         {
-            var srv = new MEMCore.Services.CategoryRepository();
-            //var result = srv.GetExpenseCategoryAsyn(5);
-            //Console.WriteLine(result);
-            var asynCallGetACat = Task.Run(() => srv.GetExpenseCategoryAsync(5));
-            asynCallGetACat.Wait();
-            var result = asynCallGetACat.Result;
-            Console.WriteLine(result.Key);
-            Console.WriteLine(result.Value);
+            //MEMCore.Services.ICategoryRepository srv = new MEMCore.Services.CategoryRepository();
+            ////var result = srv.GetExpenseCategoryAsyn(5);
+            ////Console.WriteLine(result);
+            //var asynCallGetACat = Task.Run(() => srv.GetExpenseCategoryAsync(5));
+            //asynCallGetACat.Wait();
+            //var result = asynCallGetACat.Result;
+            //Console.WriteLine(result.Key);
+            //Console.WriteLine(result.Value);
         }
         public static void ListAllExpenses()
         {
-            var srv = new MEMCore.Services.ExpenseRepository();
+            MEMCore.Services.IExpenseRepository srv = new MEMCore.Services.ExpenseRepository();
             Task<IEnumerable<MEMCore.Domain.Expense>> asynCallGetExpenses = Task.Run(() => srv.GetExpensesAsync());
 
             asynCallGetExpenses.Wait();
@@ -94,7 +93,7 @@ namespace MEMCoreAsync
             {
                 Console.WriteLine($"Expense Id: {item.Id}");
                 Console.WriteLine($"Expense Title: {item.ExpenseTitle}");
-                //Console.WriteLine($"Expense Details: {item.ExpenseDetail.Detail}");
+                Console.WriteLine($"Expense Details: {(item.ExpenseDetail == null ? null : item.ExpenseDetail.Detail)}");
                 Console.WriteLine($"Expense Amount: {item.ExpensesAmount}");
                 Console.WriteLine($"Expense Date: {item.ExpenseDate}");
                 Console.WriteLine($"Expense Currency: {item.Currency.CurrencyName}");
@@ -105,7 +104,7 @@ namespace MEMCoreAsync
         }
         public static void ListAExpenses()
         {
-            var srv = new MEMCore.Services.ExpenseRepository();
+            MEMCore.Services.IExpenseRepository srv = new MEMCore.Services.ExpenseRepository();
             Task<MEMCore.Domain.Expense> asynCallGetExpenses = Task.Run(() => srv.GetExpensesAsync(3));
 
             asynCallGetExpenses.Wait();
@@ -125,7 +124,7 @@ namespace MEMCoreAsync
         }
         public static void ListExpensesFromToDates()
         {
-            var srv = new MEMCore.Services.ExpenseRepository();
+            MEMCore.Services.IExpenseRepository srv = new MEMCore.Services.ExpenseRepository();
             var asynCallGetExpenses = Task.Run(() => srv.GetExpensesAsync(DateTime.Now.AddMonths(-1), DateTime.Now));
 
             asynCallGetExpenses.Wait();
@@ -154,9 +153,10 @@ namespace MEMCoreAsync
             oExpenses.ExpenseDate = new DateTime(2019, 7, 5, 10, 10, 10);
             oExpenses.CurrencyId = 1;
             oExpenses.ExpenseCategoryId = 5;
-            oExpenses.ExpenseDetail = new MEMCore.Domain.ExpenseDetail { Detail = "expense more details" };
+            oExpenses.ExpenseDetail = new MEMCore.Domain.ExpenseDetail { Detail = "after the fix" };
             oExpenses.Signature = "DK";
-            var srv = new MEMCore.Services.ExpenseRepository();
+
+            MEMCore.Services.IExpenseRepository srv = new MEMCore.Services.ExpenseRepository();
             var asynCallGetExpenses = Task.Run(() => srv.NewExpensesAsync(oExpenses));
 
             asynCallGetExpenses.Wait();
@@ -169,7 +169,7 @@ namespace MEMCoreAsync
         }
         public static void DeleteExpenses()
         {
-            var srv = new MEMCore.Services.ExpenseRepository();
+            MEMCore.Services.IExpenseRepository srv = new MEMCore.Services.ExpenseRepository();
             var asynCallGetExpenses = Task.Run(() => srv.DeleteExpensesAsync(4));
 
             asynCallGetExpenses.Wait();
@@ -190,7 +190,8 @@ namespace MEMCoreAsync
             oExpenses.ExpenseCategoryId = 5;
             oExpenses.ExpenseDetail = new MEMCore.Domain.ExpenseDetail { Detail = "-- just an update++" };
             oExpenses.Signature = "JS";
-            var srv = new MEMCore.Services.ExpenseRepository();
+
+            MEMCore.Services.IExpenseRepository srv = new MEMCore.Services.ExpenseRepository();
             var asynCallGetExpenses = Task.Run(() => srv.EditExpensesAsync(oExpenses, 1));
 
             asynCallGetExpenses.Wait();

@@ -7,7 +7,7 @@ namespace MEMCore.Services
 {
     public interface ICurrencyRepository
     {
-        Task<IDictionary<int, string>> GetCurrencyAsync(bool foo);
-        Task<KeyValuePair<int, string>> GetCurrencyAsync(int CurID);
+        Task<IEnumerable<Domain.Currency>> GetCurrencyAsync(bool IsSorted);
+        Task<Domain.Currency> GetCurrencyAsync(int CurID);
     }
 }

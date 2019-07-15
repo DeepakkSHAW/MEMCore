@@ -13,23 +13,30 @@ namespace MEMCore.Data
         public DbSet<ExpenseCategory> Categories { get; set; }
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<Expense> Expenses { get; set; }
+
         private enum WhichDatabase { SQLSrv, SQLite}
+        private WhichDatabase _memDBSelection = WhichDatabase.SQLite;
+        
         #region private methods
+        //A dummy method just for test
         public void AppConfigurationSetIntialValues()
         {
-            //Referance: https://garywoodfine.com/configuration-api-net-core-console-application/
+            //Reference: ForAccessDB>> https://www.nuget.org/packages/EntityFrameworkCore.Jet/
+            //Reference: Enums >> https://medium.com/agilix/entity-framework-core-enums-ee0f8f4063f2
+            //Reference: config setting >> https://garywoodfine.com/configuration-api-net-core-console-application/
             var path = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
 
             var configurationBuilder = new ConfigurationBuilder();
             configurationBuilder.AddJsonFile(path, false);
             var root = configurationBuilder.Build();
             var _connectionString = root.GetSection("DatabaseSettings").GetSection("SQLiteConnectionString").Value;
-            System.Diagnostics.Debug.WriteLine($"DB Connection { _connectionString } !");
+            System.Diagnostics.Debug.WriteLine($"DB Connection { _connectionString }!");
             var version = root.GetSection("Version").Value;
             System.Diagnostics.Debug.WriteLine($"application version: {version}.");
         }
         private String GetConnectionString(WhichDatabase whichdb)
         {
+            AppConfigurationSetIntialValues();
             var connectionString = string.Empty;
             var connType = string.Empty;
 
@@ -53,7 +60,6 @@ namespace MEMCore.Data
             connectionString = memconfig.GetSection("DatabaseSettings").GetSection(connType).Value;
             return connectionString;
         }
-
         private ILoggerFactory GetLoggerFactory()
         {
             IServiceCollection serviceCollection = new ServiceCollection();
@@ -69,9 +75,6 @@ namespace MEMCore.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //Reference: ForAccessDB>> https://www.nuget.org/packages/EntityFrameworkCore.Jet/
-            //Reference: Enums >> https://medium.com/agilix/entity-framework-core-enums-ee0f8f4063f2
-
             //*SQL Server Settings*//
             //optionsBuilder
             //    .UseLoggerFactory(GetLoggerFactory()) //* Encapsulated approach to enable logging, when consumer does have exposed database context *//
@@ -79,8 +82,8 @@ namespace MEMCore.Data
 
             optionsBuilder
     .UseLoggerFactory(GetLoggerFactory()) //* Encapsulated approach to enable logging, when consumer does have exposed database context *//
-    .UseSqlite("Filename=MEMCore.db", options => options.MaxBatchSize(30));
-            //GetConnectionString(WhichDatabase.SQLite)
+    .UseSqlite(GetConnectionString(_memDBSelection), options => options.MaxBatchSize(30));
+
             optionsBuilder.EnableSensitiveDataLogging();
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -102,16 +105,29 @@ namespace MEMCore.Data
                 .HasMaxLength(2)
                 .IsRequired(false);
 
-            modelBuilder.Entity<Expense>()
-                .Property(c => c.inDate)
-                .IsRequired()
-                //.HasDefaultValueSql("getutcdate()");
+            if (_memDBSelection == WhichDatabase.SQLite)
+            {
+                modelBuilder.Entity<Expense>()
+                  .Property(c => c.inDate)
+                  .IsRequired()
                   .HasDefaultValueSql("CURRENT_TIMESTAMP"); //Changes for sqlite
 
-            modelBuilder.Entity<Expense>()
-                .Property(c => c.updateDate)
-                //.HasDefaultValueSql("getutcdate()");
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");//Changes for sqlite
+                modelBuilder.Entity<Expense>()
+                    .Property(c => c.updateDate)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");//Changes for sqlite
+            }
+            else
+            {
+                modelBuilder.Entity<Expense>()
+                    .Property(c => c.inDate)
+                    .IsRequired()
+                    .HasDefaultValueSql("getutcdate()"); //Changes for Sql Srv
+
+                modelBuilder.Entity<Expense>()
+                    .Property(c => c.updateDate)
+                    .HasDefaultValueSql("getutcdate()");//Changes for Sql Srv
+            }
+
 
             modelBuilder.Entity<ExpenseDetail>()
                 .Property(c => c.Detail)

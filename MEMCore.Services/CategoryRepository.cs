@@ -16,21 +16,25 @@ namespace MEMCore.Services
             _expContext = new MEMCore.Data.ExpenseContext();
         }
 
-        public async Task<IDictionary<int, string>> GetCategoriesAsync(bool sorted)
+
+
+        public async Task<IEnumerable<Domain.ExpenseCategory>> GetCategoriesAsync()
+        {
+            var quary = from c in _expContext.Categories select c;
+            return await quary.ToListAsync();
+        }
+
+        public async Task<IEnumerable<ExpenseCategory>> GetCategoriesAsync(bool IsSorted)
         {
             var vCategory = new Dictionary<int, string>();
             var quary = from c in _expContext.Categories select c;
 
-            if (sorted)
+            if (IsSorted)
                 quary = quary.OrderBy(x => x.Category);
 
-            foreach (var cur in await quary.ToListAsync())
-                vCategory.TryAdd(cur.Id, cur.Category.First().ToString().ToUpper() + cur.Category.Substring(1));
-
-            return vCategory;
+            return await quary.ToListAsync();
         }
-
-        public async Task<KeyValuePair<int, string>> GetExpenseCategoryAsync(int id)
+        public async Task<KeyValuePair<int, string>> GetExpenseCategoryAsync_KeyValue(int id)
         {
             var key = id;
             var value = string.Empty;
@@ -45,7 +49,27 @@ namespace MEMCore.Services
             }
             return new KeyValuePair<int, string>(key, value);
         }
-        
+
+        public async Task<Domain.ExpenseCategory> GetExpenseCategoryAsync(int id)
+        {
+            var quary = await _expContext.Categories
+                .Where(x => x.Id == id).FirstOrDefaultAsync();
+          return quary;
+        }
+
+        //public async Task<IDictionary<int, string>> GetCategoriesAsync(bool sorted)
+        //{
+        //    var vCategory = new Dictionary<int, string>();
+        //    var quary = from c in _expContext.Categories select c;
+
+        //    if (sorted)
+        //        quary = quary.OrderBy(x => x.Category);
+
+        //    foreach (var cur in await quary.ToListAsync())
+        //        vCategory.TryAdd(cur.Id, cur.Category.First().ToString().ToUpper() + cur.Category.Substring(1));
+
+        //    return vCategory;
+        //}
         //An Alternative approach
         //public async Task<IDictionary<int, string>> GetExpenseCategoryAsync(int id)
         //{

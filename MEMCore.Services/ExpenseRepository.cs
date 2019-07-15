@@ -33,6 +33,14 @@ namespace MEMCore.Services
 
                 return result;
         }
+        public async Task<bool> ExpenseExist(int id)
+        {
+            bool found = false;
+            var oExp = await _expContext.Expenses.FirstOrDefaultAsync(x => x.Id == id);
+            if (oExp.Id > 0) found = true;
+            return found;
+        }
+
         public async Task<IEnumerable<Expense>> GetExpensesAsync()
         {
            // _expContext = new MEMCore.Data.ExpenseContext();

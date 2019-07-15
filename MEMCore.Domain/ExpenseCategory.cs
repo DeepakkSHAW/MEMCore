@@ -8,6 +8,6 @@ namespace MEMCore.Domain
     {
         public int Id { get; set; }
         public string Category { get; set; }
-        public ICollection<Expense> Expenses { get; set; }
+        public IEnumerable<Expense> Expenses { get; set; }
     }
 }
