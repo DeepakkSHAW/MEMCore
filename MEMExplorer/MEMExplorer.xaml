@@ -1,0 +1,125 @@
+﻿<Window x:Class="MEMExplorer.WindowMEMExplorer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" Height="500" Width="900" ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterOwner"
+        Title="Monthly Expense Management" Loaded="Window_Loaded" Icon="expense_wallet_money.icon.ico" >
+    <DockPanel>
+
+        <!--<StatusBar DockPanel.Dock="Bottom">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="100" />
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem>
+                <TextBlock Name="lblCursorPosition" />
+            </StatusBarItem>
+            <Separator Grid.Column="1" />
+            <StatusBarItem Grid.Column="2">
+                <TextBlock Text="c:\path\of\current\file.txt" />
+            </StatusBarItem>
+            <Separator Grid.Column="3" />
+            <StatusBarItem Grid.Column="4">
+                <ProgressBar Value="50" Width="90" Height="16" />
+            </StatusBarItem>
+        </StatusBar>-->
+
+    <Grid DockPanel.Dock="Top">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Expense" Width="100" Margin="5" Grid.Column="1" Grid.Row="1"/>
+        <TextBlock Text="Amount" Width="100" Margin="5" Grid.Column="1" Grid.Row="2"/>
+        <TextBlock Text="Date" Width="100" Margin="5" Grid.Column="1" Grid.Row="3"/>
+        <TextBlock Text="Signature" Width="100" Margin="5" Grid.Column="1" Grid.Row="4"/>
+        <TextBlock Text="Category" Width="100" Margin="5" Grid.Column="1" Grid.Row="5"/>
+        <TextBlock Text="Currency" Width="100" Margin="5" Grid.Column="1" Grid.Row="6"/>
+        <TextBlock Text="Details" Width="100" Margin="5" Grid.Column="1" Grid.Row="7"/>
+
+        <TextBox x:Name="txtExpTitle" HorizontalAlignment="Left" MaxLength="50" Width="150" Margin="5" Grid.Column="2" Grid.Row="1"/>
+        <TextBox x:Name="txtAmt" PreviewTextInput="NumberValidationTextBox" MaxLength="10" Text="0.0" Width="60" Margin="5" Grid.Column="2" Grid.Row="2" HorizontalAlignment="Left"/>
+        <DatePicker x:Name="dtExp" HorizontalAlignment="Left" Width="110" Margin="5" Grid.Column="2" Grid.Row="3"/>
+        <TextBox x:Name="txtSing" MaxLength="2" HorizontalAlignment="Left" Text="XX" Width="35" Margin="5" Grid.Column="2" Grid.Row="4"/>
+        <TextBox x:Name="txtDetails" AcceptsReturn="True" TextWrapping="WrapWithOverflow" MaxLength="256" HorizontalAlignment="Left" Text="" MinLines="3" Width="175" Margin="5" Grid.Column="2" Grid.Row="7"/>
+
+        <ComboBox  x:Name="cbCategory" HorizontalAlignment="Left" Margin="5" Width="110" Grid.Column="2" Grid.Row="5"/>
+        <ComboBox  x:Name="cbCurrency" HorizontalAlignment="Left" Margin="5" Width="110" Grid.Column="2" Grid.Row="6"/>
+
+        <DataGrid x:Name="dgExpense" HorizontalAlignment="Left" Width="540" Height="240" Margin="5" 
+                  Grid.Column="3" Grid.Row="1" Grid.RowSpan="7" SelectionUnit="FullRow"
+                  IsSynchronizedWithCurrentItem="False"
+                  SelectionChanged="DgExpense_SelectionChanged" IsReadOnly="True"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Auto"/>
+
+        <ScrollViewer Grid.Column="1" Grid.Row="8" HorizontalAlignment="Left" Width="300" Grid.ColumnSpan="3" 
+                      VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden" >
+            <WrapPanel Orientation="Vertical">
+                <Button x:Name="btnRefresh" Content="Refresh" Height="25" Width="80" Margin="5" VerticalAlignment="Top" Click="BtnRefresh_Click"/>
+                <Button x:Name="btnNew" Content="New" Height="25" Width="80" Margin="5" VerticalAlignment="Top" Click="BtnNew_Click"/>
+                <Button x:Name="btnUpdate" Content="Update" Height="25" Width="80" Margin="5" VerticalAlignment="Top" Click="BtnUpdate_Click"/>
+                <Button x:Name="btnDelete" Content="Delete" Height="25" Width="80" Margin="5" VerticalAlignment="Top" Click="BtnDelete_Click"/>
+                <Button x:Name="btnCancel" Content="Cancel" Height="25" Width="80" Margin="5" VerticalAlignment="Top" Click="BtnCancel_Click"/>
+            </WrapPanel>
+        </ScrollViewer>
+
+    </Grid>
+        <!--<TextBox DockPanel.Dock="Bottom" Height="20" AcceptsReturn="True" Name="txtEditor" Text="Auther: Deepak Shaw"/>-->
+        <TextBlock DockPanel.Dock="Bottom" Height="20" Name="lblInfo" Text="Author: Deepak Shaw"/>
+        <TextBlock DockPanel.Dock="Bottom" Height="10" Name="lblHide"/>
+        <!--<StatusBar DockPanel.Dock="Bottom" Height="20">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="70"/>
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem Grid.Column="0">
+                <TextBlock x:Name="lblTime" HorizontalAlignment="Center" Text=""/>
+            </StatusBarItem>
+            <Separator Grid.Column="1"/>
+            
+            <StatusBarItem Grid.Column="2">
+                <TextBlock Name="lblInfo" HorizontalAlignment="Center" Text=".."/>
+            </StatusBarItem>
+            <Separator Grid.Column="3"/>
+            <StatusBarItem Grid.Column="4">
+                <TextBlock HorizontalAlignment="Right" x:Name="lblCopyRight" Text="Copy Right Info"/>
+            </StatusBarItem>
+        </StatusBar>-->
+    </DockPanel>
+</Window>

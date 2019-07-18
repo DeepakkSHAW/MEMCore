@@ -309,11 +309,17 @@ namespace MEMCore.API.Controllers
                     var i = await _expenseRepository.NewExpensesAsync(oExpenses);
                     var returnExpense = _mapper.Map<Models.Expense>(oExpenses);
 
-                    var myRoute = Url.RouteUrl(RouteData.Values);
+                    //approach1: get location url 
+                    var baseUrl = HttpContext.Request.Scheme +"//"
+                        + HttpContext.Request.Host.ToUriComponent() 
+                        + Url.RouteUrl(RouteData.Values);
+                    var newLocation = baseUrl + "/" + returnExpense.Id;
+                    
+                    //approach2: get location url, not working need to check
                     var location = _linkGenerator.GetPathByAction("Get", "MEM", returnExpense.Id);
-
                     //return Created(location, returnExpense);
-                    //return Ok(i);
+
+                    //approach3: get location url, best alternative
                     return CreatedAtRoute("GetExpense", new { id = returnExpense.Id }, returnExpense);
                 }
                 return StatusCode(StatusCodes.Status400BadRequest,

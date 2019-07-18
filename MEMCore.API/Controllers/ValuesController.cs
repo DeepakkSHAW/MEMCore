@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MEMCore.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MEMCore.API.Controllers
@@ -10,6 +11,11 @@ namespace MEMCore.API.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        //private IExpenseRepository _expenseRepository;
+        //public ValuesController( IExpenseRepository expenseRepository)
+        //{
+        //    _expenseRepository = expenseRepository ?? throw new ArgumentException(nameof(expenseRepository));
+        //}
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()

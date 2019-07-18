@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <UserSecretsId>823387e8-7bf6-4e0d-82b7-1050666386b5</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +18,12 @@
   <ItemGroup>
     <ProjectReference Include="..\MEMCore.Models\MEMCore.Models.csproj" />
     <ProjectReference Include="..\MEMCore.Services\MEMCore.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DB\MEMCore.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

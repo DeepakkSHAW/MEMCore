@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MEMCoreAsync.Console", "MEM
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MEMCore.API", "MEMCore.API\MEMCore.API.csproj", "{CBF0E9D5-43FB-41EE-8971-217047254759}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MEMCore.Models", "MEMCore.Models\MEMCore.Models.csproj", "{CAB47F3B-9677-4CD9-9E2F-A13E87BDEE9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MEMCore.Models", "MEMCore.Models\MEMCore.Models.csproj", "{CAB47F3B-9677-4CD9-9E2F-A13E87BDEE9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MEMExplorer", "MEMExplorer\MEMExplorer.csproj", "{704C3D27-768A-407F-8A27-4F9898ECAD56}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{CAB47F3B-9677-4CD9-9E2F-A13E87BDEE9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CAB47F3B-9677-4CD9-9E2F-A13E87BDEE9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CAB47F3B-9677-4CD9-9E2F-A13E87BDEE9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{704C3D27-768A-407F-8A27-4F9898ECAD56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{704C3D27-768A-407F-8A27-4F9898ECAD56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{704C3D27-768A-407F-8A27-4F9898ECAD56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{704C3D27-768A-407F-8A27-4F9898ECAD56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
