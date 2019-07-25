@@ -3,14 +3,16 @@ using System;
 using MEMCore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MEMCore.Data.Migrations
 {
     [DbContext(typeof(ExpenseContext))]
-    partial class ExpenseContextModelSnapshot : ModelSnapshot
+    [Migration("20190723061024_added payment method as enum")]
+    partial class addedpaymentmethodasenum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,8 +87,6 @@ namespace MEMCore.Data.Migrations
                     b.Property<double>("ExpensesAmount");
 
                     b.Property<int>("PaymentMethod");
-
-                    b.Property<int>("PaymentType");
 
                     b.Property<string>("Signature")
                         .HasMaxLength(2);
@@ -200,7 +200,7 @@ namespace MEMCore.Data.Migrations
                         new
                         {
                             Id = 16,
-                            Category = "Donation"
+                            Category = "Personal"
                         },
                         new
                         {

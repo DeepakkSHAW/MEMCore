@@ -6,6 +6,8 @@ using System.Windows;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 using System.Windows.Navigation;
+using System.Linq;
+using System.Windows.Controls;
 
 namespace MEMExplorer
 {
@@ -17,13 +19,13 @@ namespace MEMExplorer
     public partial class WindowMEMExplorer : Window
     {
         //String _connectionString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
-        string _uriExpCategory = "MEM/ExpCategory?IsSorted=true";
-        string _uriExpCurrency = "MEM/ExpCurrency?IsSorted=true";
-        string _uriExpenses = "MEM/Expenses";
-        string _uriExpense = "MEM/Expense";
-        static List<Category> _catList;
-        static List<Currency> _curList;
-        static List<Expense> _expList;
+        private static readonly string _uriExpCategory = "MEM/ExpCategory?IsSorted=true";
+        private static readonly string _uriExpCurrency = "MEM/ExpCurrency?IsSorted=true";
+        private static readonly string _uriExpenses = "MEM/Expenses";
+        private static readonly string _uriExpense = "MEM/Expense";
+        private static List<Category> _catList;
+        private static List<Currency> _curList;
+        private static List<Expense> _expList;
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
@@ -40,7 +42,6 @@ namespace MEMExplorer
                 Task<List<Category>> catTask = Task.Run(() => ApiCaller.Get<List<Category>>(_uriExpCategory));
                 catTask.Wait();
                 _catList = catTask.Result;
-
 
                 Task<List<Currency>> curTask = Task.Run(() => ApiCaller.Get<List<Currency>>(_uriExpCurrency));
                 curTask.Wait();
@@ -97,6 +98,7 @@ namespace MEMExplorer
             lblInfo.Text = "Fetching data from Api..";
             LoadDataFromApi();
             lblInfo.Text = "Fetching completed.";
+            ClearValue();
             LoadDataIntoControls();
             //  ((NavigationWindow)LogicalTreeHelper.GetParent(this)).ResizeMode = ResizeMode.NoResize;
         }
@@ -171,15 +173,14 @@ namespace MEMExplorer
                 if (!string.IsNullOrEmpty(txtDetails.Text))
                     oExp.ExpenseDetail = txtDetails.Text;
 
-                //await ApiCaller.Post<Expense>(_uriExpense, oExp);
+                // Expense Binding  
                 var newExpTask = Task.Run(() => ApiCaller.Post<Expense>(_uriExpense, oExp));
                 newExpTask.Wait();
-                //var expense = newExpTask.Result;
-                // Expense Binding  
+                var expenseId = int.Parse(newExpTask.Result.ToString().Split('/').Last());
                 var expense = newExpTask.IsCompleted;
                 if (expense)
-                //LoadDatatoDataGrid(_uriExpenses);
                 {
+                    oExp.Id = expenseId;
                     _expList.Add(oExp);
                     LoadDataIntoControls();
                 }
@@ -272,21 +273,17 @@ namespace MEMExplorer
             }
         }
 
+        private void Txtbox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox tb = (TextBox)e.OriginalSource;
+            tb.SelectAllText();
+        }
 
     }
+    //internal static class MEMExplorerHelper
+    //{
+
+    //}
 }
-/*
-To post use something like this:
-await HttpHelper.Post<Setting>($"/api/values/{id}", setting);
-Example for delete:
 
-await HttpHelper.Delete($"/api/values/{id}");
-Example to get list:
-
-List<ClaimTerm> claimTerms = await HttpHelper.Get<List<ClaimTerm>>("/api/values/");
-Example to get only one:
-
-ClaimTerm processedClaimImage = await HttpHelper.Get<ClaimTerm>($"/api/values/{id}");
-shareeditflag
- */
 

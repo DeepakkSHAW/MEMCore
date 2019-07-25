@@ -24,27 +24,27 @@ namespace MEMCore.API.Controllers
         private ICurrencyRepository _currencyRepository;
         private IMapper _mapper;
         private LinkGenerator _linkGenerator;
-        private List<Models.Expense> expensesMapping(List<Domain.Expense> exp)
-        {
-            var outExp = new List<MEMCore.Models.Expense>();
-            foreach (var item in exp)
-            {
-                outExp.Add(new MEMCore.Models.Expense
-                {
-                    Id = item.Id,
-                    ExpenseTitle = item.ExpenseTitle,
-                    ExpensesAmount = item.ExpensesAmount,
-                    ExpenseDate = item.ExpenseDate,
-                    Signature = item.Signature,
-                    ExpenseDetail = item.ExpenseDetail == null ? null : item.ExpenseDetail.Detail,
-                    CategoryId = item.ExpenseCategoryId,
-                    Category = item.Category.Category,
-                    CurrencyId = item.CurrencyId,
-                    Currency = item.Currency.CurrencyName
-                });
-            }
-            return outExp;
-        }
+        //private List<Models.Expense> expensesMapping(List<Domain.Expense> exp)
+        //{
+        //    var outExp = new List<MEMCore.Models.Expense>();
+        //    foreach (var item in exp)
+        //    {
+        //        outExp.Add(new MEMCore.Models.Expense
+        //        {
+        //            Id = item.Id,
+        //            ExpenseTitle = item.ExpenseTitle,
+        //            ExpensesAmount = item.ExpensesAmount,
+        //            ExpenseDate = item.ExpenseDate,
+        //            Signature = item.Signature,
+        //            ExpenseDetail = item.ExpenseDetail == null ? null : item.ExpenseDetail.Detail,
+        //            CategoryId = item.ExpenseCategoryId,
+        //            Category = item.Category.Category,
+        //            CurrencyId = item.CurrencyId,
+        //            Currency = item.Currency.CurrencyName
+        //        });
+        //    }
+        //    return outExp;
+        //}
         public MEMController(IMapper mapper, LinkGenerator linkGenerator, IExpenseRepository expenseRepository,
             ICategoryRepository categoryRepository, ICurrencyRepository currencyRepository)
         {
@@ -131,9 +131,9 @@ namespace MEMCore.API.Controllers
         {
             try
             {
-                var cat = await _categoryRepository.GetCategoriesAsync(IsSorted);
-                Models.Category[] catModel = _mapper.Map<Models.Category[]>(cat);
-                return catModel;
+                var dCategory = await _categoryRepository.GetCategoriesAsync(IsSorted);
+                Models.Category[] mCategory = _mapper.Map<Models.Category[]>(dCategory);
+                return mCategory;
             }
             catch (Exception ex)
             {
@@ -149,12 +149,12 @@ namespace MEMCore.API.Controllers
         {
             try
             {
-                var cat = await _categoryRepository.GetExpenseCategoryAsync(id);
-                if (cat == null) return NotFound();
+                var dCategory = await _categoryRepository.GetExpenseCategoryAsync(id);
+                if (dCategory == null) return NotFound();
 
-                Models.Category catModel = _mapper.Map<Models.Category>(cat);
+                Models.Category mCategory = _mapper.Map<Models.Category>(dCategory);
 
-                return catModel;
+                return mCategory;
             }
             catch (Exception ex)
             {
@@ -171,10 +171,10 @@ namespace MEMCore.API.Controllers
         {
             try
             {
-                var cur = await _currencyRepository.GetCurrencyAsync(id);
-                if (cur == null) return NotFound();
-                Models.Currency curModel = _mapper.Map<Models.Currency>(cur);
-                return Ok(curModel);
+                var dCurrency = await _currencyRepository.GetCurrencyAsync(id);
+                if (dCurrency == null) return NotFound();
+                Models.Currency mCurrency = _mapper.Map<Models.Currency>(dCurrency);
+                return Ok(mCurrency);
             }
             catch (Exception ex)
             {
@@ -189,10 +189,10 @@ namespace MEMCore.API.Controllers
         {
             try
             {
-                var cur = await _currencyRepository.GetCurrencyAsync(IsSorted);
-                Models.Currency[] curModel = _mapper.Map<Models.Currency[]>(cur);
+                var dCurrency = await _currencyRepository.GetCurrencyAsync(IsSorted);
+                Models.Currency[] mCurrency = _mapper.Map<Models.Currency[]>(dCurrency);
 
-                return Ok(curModel);
+                return Ok(mCurrency);
             }
             catch (Exception ex)
             {
@@ -203,32 +203,60 @@ namespace MEMCore.API.Controllers
             }
         }
 
-        [HttpGet("Expenses")]
-        public async Task<ActionResult<Models.Expense[]>> GetExpenses()
+
+        [HttpGet("ExpensesWithoutId", Name = "ListOfExpenses_WithoutId's")]
+        public async Task<ActionResult<List<Models.ExpenseForList>>> GetExpensesNoId()
         {
             try
             {
-                var exp = await _expenseRepository.GetExpensesAsync();
-                Models.Expense[] expModel = _mapper.Map<Models.Expense[]>(exp);
-                return expModel;                //return Ok(expensesMapping(exp.ToList()));
+                var dExpense = await _expenseRepository.GetExpensesAsync();
+                List<Models.ExpenseForList> mExpense = _mapper.Map<List<Models.ExpenseForList>>(dExpense);
+                return mExpense;
             }
             catch (Exception ex)
             {
                 //_logger.Error(ex);
-                System.Diagnostics.Debug.WriteLine($"Error Type {ex.GetType().FullName}, Error Message: {ex.Message}.\n More Detailed: {ex.InnerException}");
+                System.Diagnostics.Debug.WriteLine($"Error Type {ex.GetType().FullName}, " +
+                    $"Error Message: {ex.Message}.\n More Detailed: {ex.InnerException}");
+
                 return this.StatusCode(StatusCodes.Status500InternalServerError,
                     new { Message = ex.Message, Status = "Error" });
             }
         }
-        [HttpGet("Expense/{id:int}", Name = "GetExpense")]
-        public async Task<ActionResult<Models.Expense>> GetExpense([FromRoute]int id)
+
+
+        [HttpGet("Expenses", Name="ListOfExpenses_WithId's")]
+        public async Task<ActionResult<List<Models.Expense>>> GetExpenses()
         {
             try
             {
-                var exp = await _expenseRepository.GetExpensesAsync(id);
-                if (exp.Id <= 0) return NotFound();
-                Models.Expense expModel = _mapper.Map<Models.Expense>(exp);
-                return expModel;
+                var dExpense = await _expenseRepository.GetExpensesAsync();
+                //Models.Expense[] expModel = _mapper.Map<Models.Expense[]>(exp);
+                List<Models.Expense> mExpense = _mapper.Map<List<Models.Expense>>(dExpense);
+                return mExpense;
+            }
+            catch (Exception ex)
+            {
+                //_logger.Error(ex);
+                System.Diagnostics.Debug.WriteLine($"Error Type {ex.GetType().FullName}, " +
+                    $"Error Message: {ex.Message}.\n More Detailed: {ex.InnerException}");
+
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                    new { Message = ex.Message, Status = "Error" });
+            }
+        }
+
+
+        [HttpGet("Expense/{id:int}", Name = "GetExpenseByID")]
+        public async Task<ActionResult<Models.ExpenseForList>> GetExpense([FromRoute]int id)
+        {
+            try
+            {
+                var dExpense = await _expenseRepository.GetExpensesAsync(id);
+                if (dExpense.Id <= 0) return NotFound();
+
+                Models.ExpenseForList mExpenseList = _mapper.Map<Models.ExpenseForList>(dExpense);
+                return mExpenseList;
             }
             catch (Exception ex)
             {
@@ -240,13 +268,13 @@ namespace MEMCore.API.Controllers
         }
 
         [HttpGet("ExpensesForLastMonth")]
-        public async Task<ActionResult<Models.Expense[]>> GetExpensesForLastMonth()
+        public async Task<ActionResult<List<Models.Expense>>> GetExpensesForLastMonth()
         {
             try
             {
-                var exp = await _expenseRepository.GetExpensesAsync(DateTime.Now.AddMonths(-1), DateTime.Now);
-                Models.Expense[] expModel = _mapper.Map<Models.Expense[]>(exp);
-                return expModel;                //return Ok(expensesMapping(exp.ToList()));
+                var dExpense = await _expenseRepository.GetExpensesAsync(DateTime.Now.AddMonths(-1), DateTime.Now);
+                List<Models.Expense> mExpense = _mapper.Map<List<Models.Expense>>(dExpense);
+                return mExpense;          
             }
             catch (Exception ex)
             {
@@ -257,16 +285,16 @@ namespace MEMCore.API.Controllers
             }
         }
         [HttpGet("ExpensesBetweenDates")]
-        public async Task<ActionResult<Models.Expense[]>> GetExpensesBetweenDates([FromQuery] DateTime? from = null, [FromQuery] DateTime? to = null)
+        public async Task<ActionResult<List<Models.Expense>>> GetExpensesBetweenDates([FromQuery] DateTime? from = null, [FromQuery] DateTime? to = null)
         {
             try
             {
                 DateTime oFrom = from ?? DateTime.Now.AddMonths(-1);
                 DateTime oTo = to ?? DateTime.Now;
 
-                var exp = await _expenseRepository.GetExpensesAsync(oFrom, oTo);
-                Models.Expense[] expModel = _mapper.Map<Models.Expense[]>(exp);
-                return expModel;                //return Ok(expensesMapping(exp.ToList()));
+                var dExpense = await _expenseRepository.GetExpensesAsync(oFrom, oTo);
+                List<Models.Expense> mExpense = _mapper.Map< List<Models.Expense>>(dExpense);
+                return mExpense;               
             }
             catch (Exception ex)
             {
@@ -278,15 +306,14 @@ namespace MEMCore.API.Controllers
         }
 
         [HttpPost("Expense")]
-        public async Task<ActionResult<Models.Expense>> AddANewExpense([FromBody] Models.Expense exp)
+        public async Task<ActionResult<Models.Expense>> AddANewExpense([FromBody] Models.ExpenseForInsert newExpense)
         {
             try
             {
-                var oExpenses = new Domain.Expense();
 
-                if (exp != null)
+                if (newExpense != null)
                 {
-                    if (exp.ExpenseTitle == exp.ExpenseDetail)
+                    if (newExpense.ExpenseTitle == newExpense.ExpenseDetail)
                     {
                         ModelState.AddModelError("Description", "Expense Title and details can't be same");
                     }
@@ -294,20 +321,30 @@ namespace MEMCore.API.Controllers
                     {
                         return BadRequest(ModelState);
                     }
-                    //DK: Automapper doesn't work need to check later
-                    //var expDomain = _mapper.Map<Domain.Expense>(exp);
+                    //DK: Auto mapper doesn't work for conditional mapping, need to check & fix later
+                    //var oExpenses = _mapper.Map<Domain.Expense>(newExpense);
+                    //var i = await _expenseRepository.NewExpensesAsync(oExpenses);
+                    //var returnExpense = _mapper.Map<Models.Expense>(oExpenses);
 
-                    //* Mapping the Model object to Domain object >> Business logic may apply here *//
-                    oExpenses.ExpenseTitle = exp.ExpenseTitle;
-                    oExpenses.ExpensesAmount = exp.ExpensesAmount;
-                    oExpenses.ExpenseDate = exp.ExpenseDate;
-                    oExpenses.CurrencyId = exp.CurrencyId;
-                    oExpenses.ExpenseCategoryId = exp.CategoryId;
-                    if (exp.ExpenseDetail != null)
-                        oExpenses.ExpenseDetail = new Domain.ExpenseDetail { Detail = exp.ExpenseDetail };
-                    oExpenses.Signature = exp.Signature;
-                    var i = await _expenseRepository.NewExpensesAsync(oExpenses);
-                    var returnExpense = _mapper.Map<Models.Expense>(oExpenses);
+                    //****** approach 2: Mapping the Model object to Domain object >> Business logic may apply here ******//
+                    var dExpense = new Domain.Expense();
+                    dExpense.ExpenseTitle = newExpense.ExpenseTitle;
+                    dExpense.ExpensesAmount = newExpense.ExpensesAmount;
+                    dExpense.ExpenseDate = newExpense.ExpenseDate;
+                    dExpense.CurrencyId = newExpense.CurrencyId;
+                    dExpense.ExpenseCategoryId = newExpense.CategoryId;
+                    if (Enum.TryParse(newExpense.PaymentMethod.ToString(), out Domain.PaymentMethod paymentMethod))
+                        dExpense.PaymentMethod = paymentMethod;
+                    if (Enum.TryParse(newExpense.PaymentType.ToString(), out Domain.PaymentType paymentType))
+                        dExpense.PaymentType = paymentType;
+                    //oExpenses.PaymentType = newExpense.PaymentType;
+                    if (newExpense.ExpenseDetail != null)
+                        dExpense.ExpenseDetail = new Domain.ExpenseDetail { Detail = newExpense.ExpenseDetail };
+                    dExpense.Signature = newExpense.Signature;
+
+                    var i = await _expenseRepository.NewExpensesAsync(dExpense);
+                    var returnExpense = _mapper.Map<Models.Expense>(dExpense);
+                    //****************************Mapping approach 2 ends********************//
 
                     //approach1: get location url 
                     var baseUrl = HttpContext.Request.Scheme +"//"
@@ -315,12 +352,12 @@ namespace MEMCore.API.Controllers
                         + Url.RouteUrl(RouteData.Values);
                     var newLocation = baseUrl + "/" + returnExpense.Id;
                     
-                    //approach2: get location url, not working need to check
-                    var location = _linkGenerator.GetPathByAction("Get", "MEM", returnExpense.Id);
+                    //approach2: only in Version 2.2 and above, get location url, not working need to check further
+                    var location = _linkGenerator.GetPathByAction("GetExpense", "MEM", returnExpense.Id);
                     //return Created(location, returnExpense);
 
                     //approach3: get location url, best alternative
-                    return CreatedAtRoute("GetExpense", new { id = returnExpense.Id }, returnExpense);
+                    return CreatedAtRoute("GetExpenseByID", new { id = returnExpense.Id }, returnExpense);
                 }
                 return StatusCode(StatusCodes.Status400BadRequest,
                     new JsonResult(new { Status = "Error", Message = "unable to add new expense" }));
@@ -348,26 +385,33 @@ namespace MEMCore.API.Controllers
                 new JsonResult(new { Status = "Error", Message = "Unable to delete expense" }));
         }
         [HttpPut("Expense/{id:int}")]
-        public async Task<IActionResult> UpdateExpense([FromBody] MEMCore.Models.ExpenseForUpdate exp, [FromRoute] int id)
+        public async Task<IActionResult> UpdateExpense([FromBody] MEMCore.Models.ExpenseForUpdate mExpenseUodate, [FromRoute] int id)
         {
-            var oExpenses = new Domain.Expense();
-            try
+           try
             {
-                if (exp.ExpenseTitle == exp.ExpenseDetail)
+                if (mExpenseUodate.ExpenseTitle == mExpenseUodate.ExpenseDetail)
                     ModelState.AddModelError("Description", "Expense Title and details can't be same");
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
                 if (!await _expenseRepository.ExpenseExist(id))
                     return NotFound();
+
                 //* Mapping the Model object to Domain object >> Business logic may apply here *//
-                oExpenses.ExpenseTitle = exp.ExpenseTitle;
-                oExpenses.ExpensesAmount = exp.ExpensesAmount;
-                oExpenses.ExpenseDate = exp.ExpenseDate;
-                oExpenses.CurrencyId = exp.CurrencyId;
-                oExpenses.ExpenseCategoryId = exp.CategoryId;
-                oExpenses.ExpenseDetail = new Domain.ExpenseDetail { Detail = exp.ExpenseDetail };
-                oExpenses.Signature = exp.Signature;
-                var i = await _expenseRepository.EditExpensesAsync(oExpenses, id);
+                var dExpense = new Domain.Expense();
+                dExpense.ExpenseTitle = mExpenseUodate.ExpenseTitle;
+                dExpense.ExpensesAmount = mExpenseUodate.ExpensesAmount;
+                dExpense.ExpenseDate = mExpenseUodate.ExpenseDate;
+                dExpense.CurrencyId = mExpenseUodate.CurrencyId;
+                dExpense.ExpenseCategoryId = mExpenseUodate.CategoryId;
+                if (Enum.TryParse(mExpenseUodate.PaymentMethod.ToString(), out Domain.PaymentMethod paymentMethod))
+                    dExpense.PaymentMethod = paymentMethod;
+                if (Enum.TryParse(mExpenseUodate.PaymentType.ToString(), out Domain.PaymentType paymentType))
+                    dExpense.PaymentType = paymentType;
+                if (mExpenseUodate.ExpenseDetail != null)
+                    dExpense.ExpenseDetail = new Domain.ExpenseDetail { Detail = mExpenseUodate.ExpenseDetail };
+                dExpense.Signature = mExpenseUodate.Signature;
+
+                var i = await _expenseRepository.EditExpensesAsync(dExpense, id);
                 return NoContent();
             }
             catch (Exception ex)
@@ -382,33 +426,37 @@ namespace MEMCore.API.Controllers
         }
 
         [HttpPatch("Expense/{id:int}")]
-        public async Task<IActionResult> PartiallyUpdateExpense([FromBody] JsonPatchDocument<Models.ExpenseForUpdate> patchExp, [FromRoute] int id)
+        public async Task<IActionResult> PartiallyUpdateExpense([FromBody] JsonPatchDocument<Models.ExpenseForUpdate> dExpenseUpdatePatch, [FromRoute] int id)
         {
-            var expToPatch = new Models.ExpenseForUpdate();
-            var oExpenses = new Domain.Expense();
             try
             {
-                if (patchExp == null) return BadRequest();
+                if (dExpenseUpdatePatch == null) return BadRequest();
 
                 //Get the expense from the database
                 var dbExp = await _expenseRepository.GetExpensesAsync(id);
-                if (dbExp == null) return NotFound();
+                if (dbExp.Id < 1) return NotFound();
 
                 //Create patch Expense from the database expense
                 ////* Mapping the Domain object to Model object  >> Business logic may apply here *//
-                expToPatch.ExpenseTitle = dbExp.ExpenseTitle;
-                expToPatch.ExpensesAmount = dbExp.ExpensesAmount;
-                expToPatch.ExpenseDate = dbExp.ExpenseDate;
-                expToPatch.CurrencyId = dbExp.CurrencyId;
-                expToPatch.CategoryId = dbExp.ExpenseCategoryId;
-                expToPatch.ExpenseDetail = dbExp.ExpenseDetail == null ? null: dbExp.ExpenseDetail.Detail;
-                expToPatch.Signature = dbExp.Signature;
+                //var expToPatch = new Models.ExpenseForUpdate();
+                //expToPatch.ExpenseTitle = dbExp.ExpenseTitle;
+                //expToPatch.ExpensesAmount = dbExp.ExpensesAmount;
+                //expToPatch.ExpenseDate = dbExp.ExpenseDate;
+                //expToPatch.CurrencyId = dbExp.CurrencyId;
+                //expToPatch.CategoryId = dbExp.ExpenseCategoryId;
+                //if (Enum.TryParse(dbExp.PaymentMethod.ToString(), out Models.PaymentMethod paymentMethod))
+                //    expToPatch.PaymentMethod = paymentMethod;
+                //if (Enum.TryParse(dbExp.PaymentType.ToString(), out Models.PaymentType paymentType))
+                //    expToPatch.PaymentType = paymentType;
+                //expToPatch.ExpenseDetail = dbExp.ExpenseDetail == null ? null: dbExp.ExpenseDetail.Detail;
+                //expToPatch.Signature = dbExp.Signature;
 
-                //DK: Problem in automapper need to fix
-                //var expToPatch = _mapper.Map<Models.ExpenseForUpdate>(dbExp);
+
+                //DK: Problem in auto mapper need to fix
+                var expToPatch = _mapper.Map<Models.ExpenseForUpdate>(dbExp);
 
                 // Apply Expense to ModelState
-                patchExp.ApplyTo(expToPatch, ModelState);
+                dExpenseUpdatePatch.ApplyTo(expToPatch, ModelState);
 
                 //Add custom validation rules if needed as below
                 if (expToPatch.ExpenseTitle == expToPatch.ExpenseDetail)
@@ -420,16 +468,21 @@ namespace MEMCore.API.Controllers
 
                 //Create an expense object to update the database
                 //* Mapping the Model object to Domain object >> Business logic may apply here *//
-                oExpenses.ExpenseTitle = expToPatch.ExpenseTitle;
-                oExpenses.ExpensesAmount = expToPatch.ExpensesAmount;
-                oExpenses.ExpenseDate = expToPatch.ExpenseDate;
-                oExpenses.CurrencyId = expToPatch.CurrencyId;
-                oExpenses.ExpenseCategoryId = expToPatch.CategoryId;
+                var dExpense = new Domain.Expense();
+                dExpense.ExpenseTitle = expToPatch.ExpenseTitle;
+                dExpense.ExpensesAmount = expToPatch.ExpensesAmount;
+                dExpense.ExpenseDate = expToPatch.ExpenseDate;
+                dExpense.CurrencyId = expToPatch.CurrencyId;
+                dExpense.ExpenseCategoryId = expToPatch.CategoryId;
+                if (Enum.TryParse(expToPatch.PaymentMethod.ToString(), out Domain.PaymentMethod dPaymentMethod))
+                    dExpense.PaymentMethod = dPaymentMethod;
+                if (Enum.TryParse(expToPatch.PaymentType.ToString(), out Domain.PaymentType dPaymentType))
+                    dExpense.PaymentType = dPaymentType;
                 if (expToPatch.ExpenseDetail != null)
-                    oExpenses.ExpenseDetail = new Domain.ExpenseDetail { Detail = expToPatch.ExpenseDetail };
-                oExpenses.Signature = expToPatch.Signature;
+                    dExpense.ExpenseDetail = new Domain.ExpenseDetail { Detail = expToPatch.ExpenseDetail };
+                dExpense.Signature = expToPatch.Signature;
 
-                var row_affected = await _expenseRepository.EditExpensesAsync(oExpenses, id);
+                var row_affected = await _expenseRepository.EditExpensesAsync(dExpense, id);
                 return NoContent();
             }
             catch (Exception ex)

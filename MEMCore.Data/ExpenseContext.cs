@@ -168,7 +168,7 @@ namespace MEMCore.Data
                 new ExpenseCategory() { Id = 13, Category = "Household items" },
                 new ExpenseCategory() { Id = 14, Category = "Fun money" },
                 new ExpenseCategory() { Id = 15, Category = "Office exp" },
-                new ExpenseCategory() { Id = 16, Category = "Personal" },
+                new ExpenseCategory() { Id = 16, Category = "Donation" },
                 new ExpenseCategory() { Id = 17, Category = "Miscellaneous" }
             );
 

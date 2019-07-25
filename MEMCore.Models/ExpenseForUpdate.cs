@@ -17,6 +17,8 @@ namespace MEMCore.Models
         [StringLength(2, ErrorMessage = "The {0}'s Max length can't exceed {1} characters.", MinimumLength = 1)]
         public string Signature { get; set; }
         public string ExpenseDetail { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
+        public PaymentType PaymentType { get; set; }
         public int CategoryId { get; set; }
         public int CurrencyId { get; set; }
     }

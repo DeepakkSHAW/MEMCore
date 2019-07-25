@@ -1,13 +1,10 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace MEMCore.Models
 {
-    public class Expense
+    public class ExpenseForInsert
     {
-        public int Id { get; set; }
         [Required]
         [MaxLength(50, ErrorMessage = "Max Length of Expense Title is 50")]
         public String ExpenseTitle { get; set; }
@@ -19,15 +16,9 @@ namespace MEMCore.Models
         //"The {0} must be at least {2} characters long."
         public string Signature { get; set; }
         public string ExpenseDetail { get; set; }
-        [JsonConverter(typeof(StringEnumConverter))]
         public PaymentMethod PaymentMethod { get; set; }
-        [JsonConverter(typeof(StringEnumConverter))]
         public PaymentType PaymentType { get; set; }
-        //public string PaymentMethodValue { get; set; }
-        //public string PaymentTypeValue { get; set; }
         public int CategoryId { get; set; }
-        public string Category { get; set; }
         public int CurrencyId { get; set; }
-        public string Currency { get; set; }
     }
 }

@@ -24,12 +24,12 @@ namespace MEMCore
                 //*This approach applicable if you have database context available*//
                 _expContext.GetService<ILoggerFactory>().AddProvider(new Data.MEMLoggerProvider());
                 _expContext.Database.Migrate();
-
+                var o = GetExpenses();
                 //EditExpense(1);
                 //Test methods from main
                 //NewExpense();
                 //NewExpenseWithoutDetails();
-                DeleteExpense(9);
+                //DeleteExpense(4);
 
             }
             catch (Exception ex)
@@ -47,19 +47,24 @@ namespace MEMCore
             try
             {
                 var oExp = new Domain.Expense();
-                oExp.ExpenseTitle = "2nd This expense for a test";
-                oExp.ExpensesAmount = 191.10;
-                oExp.ExpenseDate = new DateTime(2019, 12, 18, 16, 20, 20);
-                oExp.CurrencyId = 1;
-                oExp.ExpenseCategoryId = 2;
+                oExp.ExpenseTitle = "1nd This expense for a test";
+                oExp.ExpensesAmount = 20.10;
+                oExp.ExpenseDate = new DateTime(2019, 7, 24);
+                oExp.PaymentMethod = Domain.PaymentMethod.Card;
+                oExp.PaymentType = Domain.PaymentType.Refunded;
+                oExp.CurrencyId = 2;
+                oExp.ExpenseCategoryId = 3;
                 oExp.ExpenseDetail = new Domain.ExpenseDetail { Detail = "Dummy after audit-able columns" };
                 _expContext.Add(oExp);
                 result = _expContext.SaveChanges();
-
+                if (result < 1)
+                   throw new Exception("Error: Expense has not been inserted into database");
+                else
+                    result = oExp.Id;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
             return result;
         }
@@ -74,10 +79,19 @@ namespace MEMCore
                 oExp.ExpenseDate = new DateTime(2019, 12, 18, 16, 20, 20);
                 oExp.CurrencyId = 1;
                 oExp.ExpenseCategoryId = 1;
+                oExp.PaymentMethod = Domain.PaymentMethod.Others;
+                oExp.PaymentType = Domain.PaymentType.Reimbursed;
                 _expContext.Add(oExp);
                 result = _expContext.SaveChanges();
+                if (result < 1)
+                    throw new Exception("Error: Expense has not been inserted into database");
+                else
+                    result = oExp.Id;
             }
-            catch (Exception) { throw; }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
             return result;
         }
         private static int EditExpense(int id)
@@ -85,14 +99,6 @@ namespace MEMCore
             int result = -1;
             try
             {
-                //var oExp = new Domain.Expense();
-                //oExp.ExpenseTitle = "An update expense test";
-                //oExp.ExpensesAmount = 510.20;
-                //oExp.ExpenseDate = new DateTime(2020, 12, 18, 16, 20, 20);
-                //oExp.CurrencyId = 1;
-                //oExp.ExpenseCategoryId = 2;
-                //oExp.ExpenseDetail = new Domain.ExpenseDetail { Detail = "Dummy after audit-able columns" };
-
                 var entiry = _expContext.Expenses.Include(d => d.ExpenseDetail).FirstOrDefault(x => x.Id == id);
 
                 if (entiry != null)
@@ -103,14 +109,20 @@ namespace MEMCore
                     entiry.ExpenseCategoryId = 7;
                     entiry.CurrencyId = 7;
                     entiry.updateDate = DateTime.UtcNow;
+                    entiry.PaymentMethod = Domain.PaymentMethod.Others;
+                    entiry.PaymentType = Domain.PaymentType.Reimbursed;
                     entiry.ExpenseDetail = new Domain.ExpenseDetail { Detail = "updating the details+++++++++++++++++++++++" };
                    // _expContext.Update(oExp);
                     result = _expContext.SaveChanges();
+                    if (result < 1)
+                        throw new Exception("Error: Expense has not been updated into database");
+                    else
+                        result = entiry.Id;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
             return result;
         }
@@ -172,13 +184,14 @@ namespace MEMCore
                 {
                     _expContext.Expenses.Attach(oExp);
                     _expContext.Expenses.Remove(oExp);
-                    _expContext.SaveChanges();
+                    result = _expContext.SaveChanges();
+                    if (result < 1)
+                        throw new Exception("Error: Expense has not been deleted from database");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
             return result;
         }

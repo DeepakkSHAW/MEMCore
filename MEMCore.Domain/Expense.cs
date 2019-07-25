@@ -14,12 +14,14 @@ namespace MEMCore.Domain
         public DateTime inDate { get; private set; }
         //only for audit purposes
         public DateTime updateDate { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
+        public PaymentType PaymentType { get; set; }
         public int ExpenseCategoryId { get; set; }
         public int CurrencyId { get; set; }
-
         //Navigation properties
         public ExpenseDetail ExpenseDetail { get; set; }
         public ExpenseCategory Category { get; set; }
         public Currency Currency { get; set; }
+        
     }
 }

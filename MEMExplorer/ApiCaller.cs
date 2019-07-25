@@ -12,34 +12,30 @@ namespace MEMExplorer
 {
     public static class ApiCaller
     {
-        // In my case this is https://localhost:44366/
-        private static readonly string apiBasicUri = string.Empty;// ConfigurationManager.AppSettings["baseurl"];
+        // String connectionString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
+
         private static readonly string apiRootUri = ConfigurationManager.AppSettings["RootUrl"];
         private static readonly string apiVersion = ConfigurationManager.AppSettings["version"];
         private static readonly string apiUserid = ConfigurationManager.AppSettings["userId"];
         private static readonly string apiKey = ConfigurationManager.AppSettings["Key"];
-        private static Uri getBaseUri() {
+        private static Uri GetBaseUri() {
             var newBaseUri = new Uri(new Uri(apiRootUri), apiVersion);
 
             if (!newBaseUri.Segments.Last().EndsWith("/"))
                 newBaseUri = new Uri(newBaseUri.ToString() +"/");
             return newBaseUri;
         }
-
-        // String connectionString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
-
-        public static async Task Post<T>(string url, T contentValue)
+        public static async Task<Uri> Post<T>(string url, T contentValue)
         {
             using (var client = new HttpClient())
             {
                 //client.BaseAddress = new Uri(apiBasicUri);
-                client.BaseAddress = getBaseUri();
+                client.BaseAddress = GetBaseUri();
                 var content = new StringContent(JsonConvert.SerializeObject(contentValue), Encoding.UTF8, "application/json");
                 var result = await client.PostAsync(url, content);
                 result.EnsureSuccessStatusCode();
-                // return URI of the created resource.
-                //T resultHeaderLocation = result.Headers.Location;
-                //return resultHeaderLocation;
+                return result.Headers.Location;
+                //return int.Parse(result.Headers.Location.ToString().Split('/').Last());
             }
         }
 
@@ -47,7 +43,7 @@ namespace MEMExplorer
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = getBaseUri();
+                client.BaseAddress = GetBaseUri();
                 var content = new StringContent(JsonConvert.SerializeObject(stringValue), Encoding.UTF8, "application/json");
                 var result = await client.PutAsync(url, content);
                 result.EnsureSuccessStatusCode();
@@ -60,12 +56,7 @@ namespace MEMExplorer
             //using (var client = new HttpClient(handler))
             using (var client = new HttpClient())
             {
-                var u = getBaseUri();
-                //client.BaseAddress = new Uri(apiBasicUri);
-                // client.BaseAddress = new Uri("https://localhost:44350/api/v1.1/MEM/ExpCategory?IsSorted=true");
-                //https://localhost:44350/api/v1.1/MEM/ExpCategory?IsSorted=true
-                // client.BaseAddress = new Uri("https://localhost:44350/");
-                client.BaseAddress = getBaseUri();
+                client.BaseAddress = GetBaseUri();
                 var result = await client.GetAsync(url);
                 result.EnsureSuccessStatusCode();
                 string resultContentString = await result.Content.ReadAsStringAsync();
@@ -78,7 +69,7 @@ namespace MEMExplorer
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = getBaseUri();
+                client.BaseAddress = GetBaseUri();
                 var result = await client.DeleteAsync(url);
                 result.EnsureSuccessStatusCode();
             }

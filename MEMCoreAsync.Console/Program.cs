@@ -21,9 +21,9 @@ namespace MEMCoreAsync
                 //GetACurrancy();
                 //ListAllCategories();
                 //GetaCategory();
-                ListAllExpenses();
+              //  ListAllExpenses();
                 //ListAExpenses();
-                ListExpensesFromToDates();
+               // ListExpensesFromToDates();
 
              }
             catch (Exception ex)
@@ -83,7 +83,7 @@ namespace MEMCoreAsync
         public static void ListAllExpenses()
         {
             MEMCore.Services.IExpenseRepository srv = new MEMCore.Services.ExpenseRepository();
-            Task<IEnumerable<MEMCore.Domain.Expense>> asynCallGetExpenses = Task.Run(() => srv.GetExpensesAsync());
+            Task<IEnumerable<MEMCore.Domain.Expense>> asynCallGetExpenses = Task.Run(() => srv.GetExpensesWithIdAsync());
 
             asynCallGetExpenses.Wait();
 
@@ -153,7 +153,9 @@ namespace MEMCoreAsync
             oExpenses.ExpenseDate = new DateTime(2019, 7, 5, 10, 10, 10);
             oExpenses.CurrencyId = 1;
             oExpenses.ExpenseCategoryId = 5;
-            oExpenses.ExpenseDetail = new MEMCore.Domain.ExpenseDetail { Detail = "after the fix" };
+            oExpenses.PaymentMethod = PaymentMethod.DirectDeposit;
+            oExpenses.PaymentType = PaymentType.Refunded;
+            oExpenses.ExpenseDetail = new MEMCore.Domain.ExpenseDetail { Detail = "after enum testing & fixing" };
             oExpenses.Signature = "DK";
 
             MEMCore.Services.IExpenseRepository srv = new MEMCore.Services.ExpenseRepository();

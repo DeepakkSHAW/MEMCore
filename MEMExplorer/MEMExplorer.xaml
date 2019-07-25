@@ -34,63 +34,62 @@
             </StatusBarItem>
         </StatusBar>-->
 
-    <Grid DockPanel.Dock="Top">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="20"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="20"/>
-        </Grid.RowDefinitions>
-        <TextBlock Text="Expense" Width="100" Margin="5" Grid.Column="1" Grid.Row="1"/>
-        <TextBlock Text="Amount" Width="100" Margin="5" Grid.Column="1" Grid.Row="2"/>
-        <TextBlock Text="Date" Width="100" Margin="5" Grid.Column="1" Grid.Row="3"/>
-        <TextBlock Text="Signature" Width="100" Margin="5" Grid.Column="1" Grid.Row="4"/>
-        <TextBlock Text="Category" Width="100" Margin="5" Grid.Column="1" Grid.Row="5"/>
-        <TextBlock Text="Currency" Width="100" Margin="5" Grid.Column="1" Grid.Row="6"/>
-        <TextBlock Text="Details" Width="100" Margin="5" Grid.Column="1" Grid.Row="7"/>
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="20"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="20"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Expense" Width="100" Margin="5" Grid.Column="1" Grid.Row="1"/>
+            <TextBlock Text="Amount" Width="100" Margin="5" Grid.Column="1" Grid.Row="2"/>
+            <TextBlock Text="Date" Width="100" Margin="5" Grid.Column="1" Grid.Row="3"/>
+            <TextBlock Text="Signature" Width="100" Margin="5" Grid.Column="1" Grid.Row="4"/>
+            <TextBlock Text="Category" Width="100" Margin="5" Grid.Column="1" Grid.Row="5"/>
+            <TextBlock Text="Currency" Width="100" Margin="5" Grid.Column="1" Grid.Row="6"/>
+            <TextBlock Text="Details" Width="100" Margin="5" Grid.Column="1" Grid.Row="7"/>
+            <TextBox x:Name="txtExpTitle" HorizontalAlignment="Left" MaxLength="50" Width="150" Margin="5" Grid.Column="2" Grid.Row="1" GotFocus="Txtbox_GotFocus"/>
+            <TextBox x:Name="txtAmt" PreviewTextInput="NumberValidationTextBox" MaxLength="10" Text="0.0" Width="60" Margin="5" Grid.Column="2" Grid.Row="2" HorizontalAlignment="Left" GotFocus="Txtbox_GotFocus"/>
+            <DatePicker x:Name="dtExp" HorizontalAlignment="Left" Width="110" Margin="5" Grid.Column="2" Grid.Row="3"/>
+            <TextBox x:Name="txtSing" MaxLength="2" HorizontalAlignment="Left" Text="XX" Width="35" Margin="5" Grid.Column="2" Grid.Row="4" GotFocus="Txtbox_GotFocus"/>
+            <TextBox x:Name="txtDetails" AcceptsReturn="True" TextWrapping="WrapWithOverflow" MaxLength="256" HorizontalAlignment="Left" Text="" MinLines="3" Width="175" Margin="5" Grid.Column="2" Grid.Row="7" GotFocus="Txtbox_GotFocus"/>
 
-        <TextBox x:Name="txtExpTitle" HorizontalAlignment="Left" MaxLength="50" Width="150" Margin="5" Grid.Column="2" Grid.Row="1"/>
-        <TextBox x:Name="txtAmt" PreviewTextInput="NumberValidationTextBox" MaxLength="10" Text="0.0" Width="60" Margin="5" Grid.Column="2" Grid.Row="2" HorizontalAlignment="Left"/>
-        <DatePicker x:Name="dtExp" HorizontalAlignment="Left" Width="110" Margin="5" Grid.Column="2" Grid.Row="3"/>
-        <TextBox x:Name="txtSing" MaxLength="2" HorizontalAlignment="Left" Text="XX" Width="35" Margin="5" Grid.Column="2" Grid.Row="4"/>
-        <TextBox x:Name="txtDetails" AcceptsReturn="True" TextWrapping="WrapWithOverflow" MaxLength="256" HorizontalAlignment="Left" Text="" MinLines="3" Width="175" Margin="5" Grid.Column="2" Grid.Row="7"/>
+            <ComboBox  x:Name="cbCategory" HorizontalAlignment="Left" Margin="5" Width="110" Grid.Column="2" Grid.Row="5"/>
+            <ComboBox  x:Name="cbCurrency" HorizontalAlignment="Left" Margin="5" Width="110" Grid.Column="2" Grid.Row="6"/>
 
-        <ComboBox  x:Name="cbCategory" HorizontalAlignment="Left" Margin="5" Width="110" Grid.Column="2" Grid.Row="5"/>
-        <ComboBox  x:Name="cbCurrency" HorizontalAlignment="Left" Margin="5" Width="110" Grid.Column="2" Grid.Row="6"/>
-
-        <DataGrid x:Name="dgExpense" HorizontalAlignment="Left" Width="540" Height="240" Margin="5" 
+            <DataGrid x:Name="dgExpense" HorizontalAlignment="Left" Width="540" Height="240" Margin="5" 
                   Grid.Column="3" Grid.Row="1" Grid.RowSpan="7" SelectionUnit="FullRow"
                   IsSynchronizedWithCurrentItem="False"
                   SelectionChanged="DgExpense_SelectionChanged" IsReadOnly="True"
                   VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Auto"/>
 
-        <ScrollViewer Grid.Column="1" Grid.Row="8" HorizontalAlignment="Left" Width="300" Grid.ColumnSpan="3" 
+            <ScrollViewer Grid.Column="1" Grid.Row="8" HorizontalAlignment="Left" Width="300" Grid.ColumnSpan="3" 
                       VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden" >
-            <WrapPanel Orientation="Vertical">
-                <Button x:Name="btnRefresh" Content="Refresh" Height="25" Width="80" Margin="5" VerticalAlignment="Top" Click="BtnRefresh_Click"/>
-                <Button x:Name="btnNew" Content="New" Height="25" Width="80" Margin="5" VerticalAlignment="Top" Click="BtnNew_Click"/>
-                <Button x:Name="btnUpdate" Content="Update" Height="25" Width="80" Margin="5" VerticalAlignment="Top" Click="BtnUpdate_Click"/>
-                <Button x:Name="btnDelete" Content="Delete" Height="25" Width="80" Margin="5" VerticalAlignment="Top" Click="BtnDelete_Click"/>
-                <Button x:Name="btnCancel" Content="Cancel" Height="25" Width="80" Margin="5" VerticalAlignment="Top" Click="BtnCancel_Click"/>
-            </WrapPanel>
-        </ScrollViewer>
+                <WrapPanel Orientation="Vertical">
+                    <Button x:Name="btnRefresh" Content="Refresh" Height="25" Width="80" Margin="5" VerticalAlignment="Top" Click="BtnRefresh_Click"/>
+                    <Button x:Name="btnNew" Content="New" Height="25" Width="80" Margin="5" VerticalAlignment="Top" Click="BtnNew_Click"/>
+                    <Button x:Name="btnUpdate" Content="Update" Height="25" Width="80" Margin="5" VerticalAlignment="Top" Click="BtnUpdate_Click"/>
+                    <Button x:Name="btnDelete" Content="Delete" Height="25" Width="80" Margin="5" VerticalAlignment="Top" Click="BtnDelete_Click"/>
+                    <Button x:Name="btnCancel" Content="Cancel" Height="25" Width="80" Margin="5" VerticalAlignment="Top" Click="BtnCancel_Click"/>
+                </WrapPanel>
+            </ScrollViewer>
 
-    </Grid>
+        </Grid>
         <!--<TextBox DockPanel.Dock="Bottom" Height="20" AcceptsReturn="True" Name="txtEditor" Text="Auther: Deepak Shaw"/>-->
         <TextBlock DockPanel.Dock="Bottom" Height="20" Name="lblInfo" Text="Author: Deepak Shaw"/>
         <TextBlock DockPanel.Dock="Bottom" Height="10" Name="lblHide"/>
